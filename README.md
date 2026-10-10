@@ -184,6 +184,7 @@ paths anywhere: repos are found via env vars → sibling checkout →
 | port already in use | `LINEAGE_PORT=8790 docker compose up -d`, open that port |
 | chat answers `mode: router` | `.env` missing/`OPENAI_API_KEY` unset → fill it, `docker compose up -d` |
 | want the latest upstream code | `REBUILD=1 docker compose up -d` (or set the commit pins) |
+| want to replay the very first boot | `docker compose down -v` then `docker compose up --build` (wipes volumes → re-clones repos, rebuilds graph) |
 | first boot seems stuck | it is cloning erpnext (~1–2 min) — `docker compose logs -f lineage` |
 | LLM errors mid-chat | the answer shows `LLM unavailable — answered by router: <reason>` (quota, network, model id) |
 
