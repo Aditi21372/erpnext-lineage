@@ -75,13 +75,15 @@ viewer.py  ── renders ──►    build.py ── orchestrates ──► do
 
 **Frontend** — `viewer.py` generates one self-contained page (also used, sliced,
 by `views.py`): **Sigma.js WebGL** renders 5.5k nodes at ~120 fps with a
-one-shot `d3-force` layout (no live physics). Semantic LOD: the initial view is
-the doctype-level macro layer (derived aggregate edges keep it readable);
-fields orbit their owner and appear as you zoom. Click a node to **highlight
-its path** (others dim, never hide). Search is **fuzzy and live** — token +
-typo-tolerant, showing only matches + their immediate context. Nodes are
-semi-transparent with PII/boundary rings; hover shows structured detail cards
-(evidence `file:line`, samples, counts).
+one-shot `d3-force` layout (no live physics). DOM/SVG and 2D-canvas renderers
+choke on a graph this size, so the viewer was **migrated from HTML rendering to
+WebGL (GPU)** — that is what makes the full graph load instantly and stay
+smooth. Semantic LOD: the initial view is the doctype-level macro layer
+(derived aggregate edges keep it readable); fields orbit their owner and appear
+as you zoom. Click a node to **highlight its path** (others dim, never hide).
+Search is **fuzzy and live** — token + typo-tolerant, showing only matches +
+their immediate context. Nodes are semi-transparent with PII/boundary rings;
+hover shows structured detail cards (evidence `file:line`, samples, counts).
 
 **The chat agent's 13 tools**
 
