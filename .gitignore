@@ -19,6 +19,7 @@ build/
 # Read-only source checkouts (see scripts/fetch_sources.sh)
 sources/
 
-# Generated artifacts — rebuild with `make build views demo`
+# Generated artifacts — rebuild with `make build views demo` / `lineage site`
 data/
 views/
+site/

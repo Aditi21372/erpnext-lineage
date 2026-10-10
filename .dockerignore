@@ -8,6 +8,7 @@ __pycache__
 data
 views
 sources
+site
 .venv*
 .playwright-mcp
 uv.lock

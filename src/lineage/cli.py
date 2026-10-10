@@ -9,6 +9,7 @@
     lineage render    export Mermaid / Graphviz DOT
     lineage views     write the six small HTML views to views/
     lineage page      write one self-contained interactive HTML page
+    lineage site      export the static GitHub Pages site (graph + views)
     lineage dummy     generate / apply fictional demo data
 
 Every command returns a non-zero exit code on failure, so CI can chain them.
@@ -118,6 +119,14 @@ def _cmd_page(args) -> int:
     return viewer.main(argv)
 
 
+def _cmd_site(args) -> int:
+    from . import site
+    argv = ["--outdir", args.outdir]
+    if args.graph:
+        argv += ["--graph", args.graph]
+    return site.main(argv)
+
+
 def _cmd_dummy(args) -> int:
     from . import dummy
     return dummy.main(args.rest)
@@ -180,6 +189,11 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--out", default=str(paths.DATA_DIR / "graph.html"))
     p.add_argument("--focus", help="node id to suggest in the search box")
     p.set_defaults(fn=_cmd_page)
+
+    p = sub.add_parser("site", help="export the static GitHub Pages site (graph + views)")
+    p.add_argument("--graph", help="graph path (default: demo graph if present)")
+    p.add_argument("--outdir", default=str(paths.PROJECT_ROOT / "site"))
+    p.set_defaults(fn=_cmd_site)
 
     p = sub.add_parser("dummy", help="generate / apply fictional demo data")
     p.add_argument("rest", nargs=argparse.REMAINDER,

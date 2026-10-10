@@ -20,6 +20,10 @@ One evidence-backed artifact + a chat agent + six focused views:
 
 ![chat + fuzzy search](docs/screenshot-search.png)
 
+**Live static demo (GitHub Pages):**
+<https://aditi21372.github.io/erpnext-lineage/> — the interactive graph and
+the six views (the chat agent runs locally with one Docker command, see below).
+
 ## For reviewers — 3 steps
 
 ```bash
@@ -146,6 +150,7 @@ lineage test         # 98 spec + vulnerability tests
 lineage audit        # evidence audit vs the real repos (exit != 0 on findings)
 lineage chat         # chat UI at http://127.0.0.1:8765  (load .env first for LLM)
 lineage views        # six HTML views → views/index.html
+lineage site         # static export (graph + views) → site/  (GitHub Pages)
 lineage agent "Which PII fields does Customer have?"   # CLI agent
 ```
 

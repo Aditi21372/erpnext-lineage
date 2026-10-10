@@ -1173,6 +1173,41 @@ def test_p7_chat_accepts_history_and_rejects_bad():
         httpd.server_close()
 
 
+# --------------------------------------- Pages site export
+
+def test_site_export_writes_landing_graph_and_views():
+    import tempfile
+    from lineage import site as site_mod
+    g = {"meta": {"node_count": 2, "edge_count": 0,
+                  "git_commits": {"erpnext": "7474d9e", "frappe_docker": "2b26e9a"}},
+         "nodes": [
+             {"id": "doctype:x", "type": "doctype", "name": "X", "label": "X",
+              "tier": 3, "group": "data", "sensitivity": "none",
+              "boundary": False, "confidence": "parsed", "evidence": [],
+              "files": [], "scenarios": ["repo"], "props": {}},
+             {"id": "volume:y", "type": "volume", "name": "Y", "label": "Y",
+              "tier": 4, "group": "storage", "sensitivity": "none",
+              "boundary": False, "confidence": "parsed", "evidence": [],
+              "files": [], "scenarios": ["repo"], "props": {}}],
+         "edges": []}
+    with tempfile.TemporaryDirectory() as td:
+        td = Path(td)
+        views = td / "views-src"
+        (views / "vendor").mkdir(parents=True)
+        (views / "index.html").write_text("<html>views</html>", encoding="utf-8")
+        (views / "vendor" / "sigma.min.js").write_text("//", encoding="utf-8")
+        out = td / "site"
+        site_mod.build(g, out, views_src=views)
+        assert (out / "index.html").exists()
+        assert (out / "graph.html").exists()
+        assert (out / "views" / "index.html").exists()
+        assert (out / "views" / "vendor" / "sigma.min.js").exists()
+        landing = (out / "index.html").read_text(encoding="utf-8")
+        assert "7474d9e" in landing and "graph.html" in landing
+        page = (out / "graph.html").read_text(encoding="utf-8")
+        assert "sigma" in page and 'id="chat"' not in page   # static: no chat panel
+
+
 # ---------------------------------------------------------------- runner
 
 def run(phase: str | None = None, only: str | None = None) -> int:

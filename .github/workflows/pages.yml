@@ -1,0 +1,51 @@
+name: pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: pip install -e .
+
+      - name: Fetch pinned sources
+        run: ./scripts/fetch_sources.sh sources
+
+      - name: Build graph, demo data and views
+        run: |
+          lineage build
+          lineage dummy generate --out data/dummy_data.json
+          lineage dummy apply --data data/dummy_data.json --out data/graph_demo.json
+          lineage views
+
+      - name: Export the static site
+        run: lineage site --graph data/graph_demo.json --outdir site
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4
