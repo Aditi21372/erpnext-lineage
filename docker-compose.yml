@@ -1,0 +1,36 @@
+# Plug-and-play lineage: builds the graph from pinned upstream sources on
+# first start (into a volume), generates the six views, and serves the
+# chat UI + views on one port.
+#
+#   docker compose up --build
+#   open http://localhost:8765
+#
+# LLM configuration (optional): copy .env.example to .env and set
+# OPENAI_API_KEY / OPENAI_BASE_URL / OPENAI_MODEL for any OpenAI-compatible
+# endpoint (e.g. your opencode-go gateway). Without a key the deterministic
+# router answers every question — same grounding, no LLM.
+services:
+  lineage:
+    build: .
+    ports:
+      - "${LINEAGE_PORT:-8765}:8765"
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-}
+      OPENAI_SESSION: ${OPENAI_SESSION:-}
+      # set REBUILD=1 to re-clone sources + rebuild the graph on next start
+      REBUILD: ${REBUILD:-}
+      # pin overrides (defaults: frappe_docker 2b26e9a, erpnext 7474d9e)
+      FRAPPE_DOCKER_COMMIT: ${FRAPPE_DOCKER_COMMIT:-}
+      ERPNEXT_COMMIT: ${ERPNEXT_COMMIT:-}
+    volumes:
+      - lineage-data:/app/data
+      - lineage-views:/app/views
+      - lineage-sources:/app/sources
+    restart: unless-stopped
+
+volumes:
+  lineage-data:
+  lineage-views:
+  lineage-sources:

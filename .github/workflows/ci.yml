@@ -1,0 +1,33 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: pip install -e .
+
+      - name: Fetch pinned sources (frappe_docker 2b26e9a, erpnext 7474d9e)
+        run: ./scripts/fetch_sources.sh sources
+
+      - name: Build the graph
+        run: lineage build
+
+      - name: Spec + vulnerability tests
+        run: lineage test
+
+      - name: Adversarial audit (all evidence vs real files, leak scan)
+        run: lineage audit
+
+      - name: Render the six views
+        run: lineage views

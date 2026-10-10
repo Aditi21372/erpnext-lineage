@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# Secrets (LLM keys) — see .env.example
+.env
+
+# Read-only source checkouts (see scripts/fetch_sources.sh)
+sources/
+
+# Generated artifacts — rebuild with `make build views demo`
+data/
+views/
