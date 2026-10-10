@@ -20,9 +20,11 @@ One evidence-backed artifact + a chat agent + six focused views:
 
 ![chat + fuzzy search](docs/screenshot-search.png)
 
-**Live static demo (GitHub Pages):**
-<https://aditi21372.github.io/erpnext-lineage/> — the interactive graph and
-the six views (the chat agent runs locally with one Docker command, see below).
+**Live static demo (GitHub Pages):** <https://aditi21372.github.io/erpnext-lineage/>
+— the interactive graph and the six views run fully client-side.
+**Note: the LLM chat cannot run on this static URL** (it needs the tool-loop
+server + your API key) — start it locally with one Docker command, see
+[For reviewers](#for-reviewers--3-steps).
 
 ## For reviewers — 3 steps
 
